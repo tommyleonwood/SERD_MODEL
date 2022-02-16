@@ -2,8 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-#HOME OFFICE
-
 pd=float(1/3)
 pr=float(1/3)
 pt=pd+pr
