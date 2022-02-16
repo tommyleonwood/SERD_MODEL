@@ -3,7 +3,7 @@ This repository will contain all the code for the SERD model.
 
 ## Brief overview:
 The SERD model is a descrete space-time representation emergent from a philosophical first principle concerning the existance of dimensions within 'nothingness'.
-In this model space-time is represented as an interconnected network of matter particles separated by edges called 'Interaction Edges' (IE). An IE is a collection of smaller objects calle 'Space Elements' (SE), these are the fundermental units of space that make up the proportionate sizes of objects in space.
+In this model space-time is represented as an interconnected network of matter particles separated by edges called 'Interaction Edges' (IE). An IE is a collection of smaller objects called 'Space Elements' (SE), these are the fundermental units of space that make up the proportionate sizes of objects in space.
 SEs may duplicate (become two SE) or reduce (dissapear) though any incremental change in time. When this happens a bit of information is created that propagated bidirectionally through the network as the system evolves. 
 The system may be considered to be a 'multiway system' as there are many possible branches that the system may take.
 The nodes represent the constiuent parts of matter particles. 
