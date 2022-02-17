@@ -29,4 +29,4 @@ In the case of the universe it is likely that the hidden state is much larger th
 What we are showing with this experiment presented here is evidence that the size of the observable universe is constrained by its age.
 How do we do that?
 We measure the time it takes for infromation to propagate accross the IE and average it at the point of measurement, this gives us the expected update time. Then we compare that to the observed size of the IE. We aim to show that with sufficient scaling that these two values tend to become equal. In other words, the observed size of the universe is contained by the speed of light, which in this scale is just 1.
-Remember that we are considering an IE connecting our our point of reference and the edge of our observable universe.
+We are considering an IE connecting our central position of observation and either distant galaxies or the edge of our observable universe, and therefore it's expansion rate should be correlated to that of our universe, if the model has physical comparability.
