@@ -9,7 +9,6 @@ Et=int(1)
 StEv=[St]
 EtEv=[Et]
 
-# Creating an array
 StEvIt=[]
 EtEvIt=[]
 

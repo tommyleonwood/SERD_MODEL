@@ -203,7 +203,6 @@ for i1 in range(iterations):
 normValObsStEvTot=[]
 normValObsEtEvTot=[]
 normValObsTauEvTot=[]
-normValObsSampleSize=[]
 
 for i1 in range(TS2):
   if ObsSampleSize[i1]>0:
