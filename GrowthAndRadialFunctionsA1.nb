@@ -1,0 +1,3080 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    133866,       3072]
+NotebookOptionsPosition[    132307,       3039]
+NotebookOutlinePosition[    132712,       3055]
+CellTagsIndexPosition[    132669,       3052]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Functions for SERD model growth", "Section",
+ CellChangeTimes->{{3.884324080145769*^9, 
+  3.8843240964464674`*^9}},ExpressionUUID->"d5971dd9-a1f1-41c2-baba-\
+8f00600e169d"],
+
+Cell[CellGroupData[{
+
+Cell["1. Essential functions", "Subsection",
+ CellChangeTimes->{{3.884327102899201*^9, 3.884327108005563*^9}, {
+  3.884340854005676*^9, 
+  3.8843408581813335`*^9}},ExpressionUUID->"c8d60623-4fed-4913-bbc8-\
+803a507a9b73"],
+
+Cell["EVALUATE FIRST!", "Text",
+ CellChangeTimes->{{3.8843241308649054`*^9, 3.884324145676822*^9}, {
+  3.884324230373278*^9, 3.8843242533853536`*^9}, {3.8843404002497964`*^9, 
+  3.884340410314084*^9}, {3.8843408606301513`*^9, 
+  3.884340860782202*^9}},ExpressionUUID->"6999edb8-dbd4-47ab-8f76-\
+ff15a2ffe26a"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\"\<FUNCTIONS\>\"", ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"S2N", "[", "x_", "]"}], ":=", 
+  RowBox[{"ToExpression", "[", 
+   RowBox[{"StringDrop", "[", 
+    RowBox[{
+     RowBox[{"ToString", "[", "x", "]"}], ",", "1"}], "]"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"N2S", "[", "y_", "]"}], ":=", 
+  RowBox[{"ToExpression", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", "x", "]"}], "<>", 
+    RowBox[{"ToString", "[", "y", "]"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"N2SPP", "[", "x_", "]"}], ":=", 
+  RowBox[{"ToExpression", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", "p", "]"}], "<>", 
+    RowBox[{"ToString", "[", "x", "]"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"N2SSE", "[", "x_", "]"}], ":=", 
+  RowBox[{"ToExpression", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", "s", "]"}], "<>", 
+    RowBox[{"ToString", "[", "x", "]"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"mapS2N", "[", "x_", "]"}], ":=", 
+   RowBox[{"Map", "[", 
+    RowBox[{"S2N", ",", "x", ",", 
+     RowBox[{"{", "2", "}"}]}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"DeleteSubset", "[", 
+    RowBox[{"data_", ",", "sub_"}], "]"}], ":=", 
+   RowBox[{"DeleteCases", "[", 
+    RowBox[{"data", ",", 
+     RowBox[{"Alternatives", "@@", "sub"}]}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"\"\<Partition partition sets in PSB on IGs\>\"", 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"UpdatePSBconnectionsDueToBifurcations", "[", 
+    RowBox[{"IGset_list", ",", "IGin_", ",", "PSB_", ",", "PSBloc_"}], "]"}], 
+   ":=", 
+   RowBox[{"Reap", "[", 
+    RowBox[{
+     RowBox[{"ActiveLocPSBn", "=", 
+      RowBox[{"Length", "[", 
+       RowBox[{
+        RowBox[{"IGset", "[", 
+         RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"ActiveLocPSBn", ">", "0"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Set", "[", 
+           RowBox[{"PSBtemp", ",", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"IGset", "[", 
+               RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], "[", 
+             RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";"}], 
+         "\[IndentingNewLine]", ",", 
+         RowBox[{"{", 
+          RowBox[{"i1", ",", "ActiveLocPSBn"}], "}"}]}], "]"}]}], "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"InactiveLocPSBn", "=", 
+      RowBox[{"Length", "[", 
+       RowBox[{
+        RowBox[{"IGset", "[", 
+         RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+        RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"InactiveLocPSBn", ">", "0"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Do", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Set", "[", 
+            RowBox[{"PSBtemp", ",", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"IGset", "[", 
+                RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+               RowBox[{"[", "3", "]"}], "]"}], "[", 
+              RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";"}], 
+          "\[IndentingNewLine]", ",", 
+          RowBox[{"{", 
+           RowBox[{"i1", ",", "InactiveLocPSBn"}], "}"}]}], "]"}], ";"}]}], 
+      "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"ActiveLocPSBn", "=", 
+      RowBox[{"Length", "[", 
+       RowBox[{
+        RowBox[{"IGset", "[", 
+         RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"ActiveLocPSBn", ">", "0"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Set", "[", 
+           RowBox[{"PSBtemp", ",", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"IGset", "[", 
+               RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], "[", 
+             RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Set", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], "[", 
+             RowBox[{"[", "2", "]"}], "]"}], ",", 
+            RowBox[{"DeleteSubset", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"PSBtemp", "[", 
+                RowBox[{"[", "2", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"PSB", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";"}], 
+         "\[IndentingNewLine]", ",", 
+         RowBox[{"{", 
+          RowBox[{"i1", ",", "ActiveLocPSBn"}], "}"}]}], "]"}]}], "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"InactiveLocPSBn", "=", 
+      RowBox[{"Length", "[", 
+       RowBox[{
+        RowBox[{"IGset", "[", 
+         RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+        RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"InactiveLocPSBn", ">", "0"}], ",", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Do", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Set", "[", 
+            RowBox[{"PSBtemp", ",", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"IGset", "[", 
+                RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+               RowBox[{"[", "3", "]"}], "]"}], "[", 
+              RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "[", 
+              RowBox[{"[", "1", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{"IGset", "[", 
+                  RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                 RowBox[{"[", "3", "]"}], "]"}], "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "[", 
+              RowBox[{"[", "2", "]"}], "]"}], ",", 
+             RowBox[{"DeleteSubset", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"PSBtemp", "[", 
+                 RowBox[{"[", "2", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"PSB", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], ";"}], 
+          "\[IndentingNewLine]", ",", 
+          RowBox[{"{", 
+           RowBox[{"i1", ",", "InactiveLocPSBn"}], "}"}]}], "]"}], ";"}]}], 
+      "]"}], ";"}], "]"}]}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"chooseSE", "[", 
+    RowBox[{"SEinSet_", ",", "scaleFactor_"}], "]"}], ":=", 
+   RowBox[{"RandomSample", "[", 
+    RowBox[{"SEinSet", ",", 
+     RowBox[{"Floor", "[", 
+      RowBox[{"scaleFactor", "*", 
+       RowBox[{"Length", "[", "SEinSet", "]"}]}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"chooseSE2", "[", 
+     RowBox[{"SEinSet_", ",", "n_"}], "]"}], ":=", 
+    RowBox[{"RandomSample", "[", 
+     RowBox[{"SEinSet", ",", "n"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"choosePP1", "[", 
+    RowBox[{"PPinSet_", ",", "scaleFactor_"}], "]"}], ":=", 
+   RowBox[{"RandomSample", "[", 
+    RowBox[{"SEinSet", ",", 
+     RowBox[{"Floor", "[", 
+      RowBox[{"scaleFactor", "*", 
+       RowBox[{"Length", "[", "SEinSet", "]"}]}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"choosePP2", "[", 
+     RowBox[{"PPinSet_", ",", "n_"}], "]"}], ":=", 
+    RowBox[{"RandomSample", "[", 
+     RowBox[{"PPinSet", ",", "n"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"makeGraph1", "[", "x_", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"ResourceFunction", "[", "\"\<HypergraphPlot\>\"", "]"}], "[", 
+    RowBox[{
+     RowBox[{"mapS2N", "[", "x", "]"}], ",", 
+     RowBox[{"\"\<BaseLayout\>\"", "\[Rule]", "\"\<SpringEmbedding\>\""}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"makeGraph2", "[", "x_", "]"}], ":=", 
+   RowBox[{"hyperPlot", "[", 
+    RowBox[{"mapS2N", "[", "x", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"makeGraph3", "[", "x_", "]"}], ":=", 
+   RowBox[{"SimpleHypergraphPlot", "[", 
+    RowBox[{"mapS2N", "[", "x", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"makeGraph4", "[", "x_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"ResourceFunction", "[", "\"\<WolframModelPlot\>\"", "]"}], "[", 
+     RowBox[{"mapS2N", "[", "x", "]"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"SimpleHypergraphPlot", "[", "hyp_List", "]"}], ":=", 
+    RowBox[{"CommunityGraphPlot", "[", 
+     RowBox[{
+      RowBox[{"Graph", "[", 
+       RowBox[{
+        RowBox[{"DeleteDuplicates", "[", 
+         RowBox[{"Flatten", "[", 
+          RowBox[{"hyp", ",", "1"}], "]"}], "]"}], ",", 
+        RowBox[{"{", "}"}], ",", 
+        RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], "]"}], ",", 
+      RowBox[{"Select", "[", 
+       RowBox[{"hyp", ",", "ListQ"}], "]"}], ",", 
+      RowBox[{"CommunityRegionStyle", "\[Rule]", 
+       RowBox[{"Apply", "[", 
+        RowBox[{
+         RowBox[{"Function", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"r", ",", "g", ",", "b"}], "}"}], ",", 
+           RowBox[{"RGBColor", "[", 
+            RowBox[{"r", ",", "g", ",", "b", ",", "0.5"}], "]"}]}], "]"}], 
+         ",", 
+         RowBox[{"Most", "[", 
+          RowBox[{"Tuples", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"0", ",", "1"}], "}"}], ",", "3"}], "]"}], "]"}], ",", 
+         RowBox[{"{", "1", "}"}]}], "]"}]}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"updatePPSEIGsets", "[", "TS1_", "]"}], ":=", 
+  RowBox[{"Reap", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"PPset", "=", 
+     RowBox[{"PPsetEv", "[", 
+      RowBox[{"[", "TS1", "]"}], "]"}]}], ";", 
+    RowBox[{"SEset", "=", 
+     RowBox[{"SEsetEv", "[", 
+      RowBox[{"[", "TS1", "]"}], "]"}]}], ";", 
+    RowBox[{"IGset", "=", 
+     RowBox[{"IGsetEv", "[", 
+      RowBox[{"[", "TS1", "]"}], "]"}]}], ";"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.8843241197084017`*^9, 3.884324120321556*^9}, {
+  3.8843383947106447`*^9, 3.8843384539459267`*^9}},
+ CellLabel->
+  "In[276]:=",ExpressionUUID->"f9a32e44-29bd-4f44-8bbf-3d9b140f236a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["2. SERD model growth function", "Subsection",
+ CellChangeTimes->{{3.884327124385481*^9, 3.8843271309651475`*^9}, {
+  3.8843408483561907`*^9, 
+  3.8843408490074024`*^9}},ExpressionUUID->"5fb59b86-eb82-48b8-a225-\
+900661358f58"],
+
+Cell[TextData[{
+ "SERD network growth expansion with Point Particle (PP) splitting, \
+Propagating Structural Bifurcations (PSBs) and Space Element (SE) \
+duplications.\n\nThe following function grows the SERD network randomly with \
+PP and SE growth parameters ",
+ StyleBox["ps",
+  FontSlant->"Italic"],
+ " and ",
+ StyleBox["pd",
+  FontSlant->"Italic"],
+ " respectively."
+}], "Text",
+ CellChangeTimes->{{3.8843249221421657`*^9, 
+  3.8843250466235275`*^9}},ExpressionUUID->"a4ac194f-777c-4b14-ba83-\
+52d06c9fdb83"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\"\<SETUP\>\"", ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"growSERDmodelFuncSlowGrowth1", "[", 
+    RowBox[{"ps_", ",", "pd_", ",", "TS_", ",", "SEinitial_"}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Reap", "[", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"SEn", "=", "SEinitial"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"SEset", "=", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"N2S", "[", "i1", "]"}], ",", 
+            RowBox[{"N2S", "[", 
+             RowBox[{"i1", "+", "1"}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i1", ",", "SEn"}], "}"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"SEinSet", "=", 
+        RowBox[{"Table", "[", 
+         RowBox[{"i1", ",", 
+          RowBox[{"{", 
+           RowBox[{"i1", ",", "SEn"}], "}"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"SEin", "=", 
+        RowBox[{"SEn", "+", "1"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"PPn", "=", "2"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"PPset", "=", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", "x1", "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"ToExpression", "[", 
+            RowBox[{
+             RowBox[{"ToString", "[", "x", "]"}], "<>", 
+             RowBox[{"ToString", "[", 
+              RowBox[{"SEn", "+", "1"}], "]"}]}], "]"}], "}"}]}], "}"}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"PPinSet", "=", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "2"}], "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"PPin", "=", 
+        RowBox[{"PPn", "+", "1"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"IGn", "=", 
+        RowBox[{"SEn", "+", "1"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"IGin", "=", 
+        RowBox[{"IGn", "+", "1"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"IGset", "=", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"i1", "\[Equal]", "1"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"N2SPP", "[", "1", "]"}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"N2SSE", "[", "i1", "]"}], "}"}]}], "}"}], ",", 
+              RowBox[{"{", "}"}], ",", 
+              RowBox[{"{", "}"}]}], "}"}], ",", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"i1", "\[Equal]", "IGn"}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"N2SPP", "[", "2", "]"}], "}"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"N2SSE", "[", 
+                    RowBox[{"i1", "-", "1"}], "]"}], "}"}]}], "}"}], ",", 
+                RowBox[{"{", "}"}], ",", 
+                RowBox[{"{", "}"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"{", "}"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"N2SSE", "[", 
+                    RowBox[{"i1", "-", "1"}], "]"}], ",", 
+                    RowBox[{"N2SSE", "[", "i1", "]"}]}], "}"}]}], "}"}], ",", 
+                RowBox[{"{", "}"}], ",", 
+                RowBox[{"{", "}"}]}], "}"}]}], "]"}]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i1", ",", "IGn"}], "}"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"PSBn", "=", "0"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"PSBinSet", "=", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"SEredIndSet", "=", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"IGlossSet", "=", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"PSBlossSet", "=", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       "\"\<The following is to repress unoposing PSBs of a distance of 1 \
+from generating.\>\"", ";", "\[IndentingNewLine]", 
+       RowBox[{"PPtempCompList", "=", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"PPtempCompList1", "=", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"hyperEdgeEvSet", "=", 
+        RowBox[{"{", 
+         RowBox[{"Join", "[", 
+          RowBox[{"PPset", ",", "SEset"}], "]"}], "}"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"PPsetEv", "=", 
+        RowBox[{"{", "PPset", "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"SEsetEv", "=", 
+        RowBox[{"{", "SEset", "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"IGsetEv", "=", 
+        RowBox[{"{", "IGset", "}"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\"\<SPLIT\>\"", ";", "\[IndentingNewLine]", 
+          RowBox[{"PPactive", "=", 
+           RowBox[{"DeleteSubset", "[", 
+            RowBox[{"PPinSet", ",", "PPtempCompList"}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"PPactive", "\[NotEqual]", 
+             RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"PPtempCompList", "=", 
+              RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"rand", "=", 
+              RowBox[{"Random", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"rand", "<", "ps"}], ",", 
+               RowBox[{
+                RowBox[{"PPsplitOrder", "=", 
+                 RowBox[{"choosePP2", "[", 
+                  RowBox[{"PPactive", ",", "1"}], "]"}]}], ";"}], ",", 
+               RowBox[{
+                RowBox[{"PPsplitOrder", "=", 
+                 RowBox[{"{", "}"}]}], ";"}]}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"splitsN", "=", 
+              RowBox[{"Length", "[", "PPsplitOrder", "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"PPsplitOrder", "\[NotEqual]", 
+                RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+               RowBox[{"Do", "[", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"PPind", "=", 
+                   RowBox[{"PPsplitOrder", "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"PPtempCompList", "=", 
+                   RowBox[{"Join", "[", 
+                    RowBox[{"PPtempCompList", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"PPind", ",", "PPin"}], "}"}]}], "]"}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"IGadjN", "=", 
+                   RowBox[{"Length", "[", 
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", "PPind", "]"}], "]"}], "]"}]}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"Do", "[", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"IGhost", "=", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", "PPind", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGhost", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"N2SPP", "[", "PPind", "]"}], "}"}], ",", 
+                    RowBox[{"{", "}"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"N2SPP", "[", "PPin", "]"}], "}"}], ",", 
+                    RowBox[{"{", "}"}]}], "}"}]}], "}"}]}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"PSBinSet", ",", "IGhost"}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGhost", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{"N2SPP", "[", "PPin", "]"}]}], "]"}], ";"}], 
+                    "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "IGadjN"}], "}"}]}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"PSBn", "+=", "IGadjN"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"AppendTo", "[", 
+                   RowBox[{"PPset", ",", 
+                    RowBox[{"Append", "[", 
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", "PPind", "]"}], "]"}], ",", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "]"}]}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"AppendTo", "[", 
+                   RowBox[{"PPinSet", ",", "PPin"}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"AppendTo", "[", 
+                   RowBox[{"IGset", ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"N2SPP", "[", "PPin", "]"}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"N2SSE", "[", "SEin", "]"}], "}"}]}], "}"}], ",", 
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{"{", "}"}]}], "}"}]}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"IGin", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                  RowBox[{"PPin", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                  RowBox[{"AppendTo", "[", 
+                   RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", "PPind", "]"}], "]"}], ",", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"AppendTo", "[", 
+                   RowBox[{"SEset", ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"N2S", "[", 
+                    RowBox[{"IGin", "-", "1"}], "]"}], ",", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "}"}]}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"AppendTo", "[", 
+                   RowBox[{"SEinSet", ",", "SEin"}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"AppendTo", "[", 
+                   RowBox[{"IGset", ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"N2SPP", "[", "PPind", "]"}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"N2SSE", "[", "SEin", "]"}], "}"}]}], "}"}], ",", 
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{"{", "}"}]}], "}"}]}], "]"}], ";", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"SEin", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                  RowBox[{"IGin", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                  RowBox[{"IGn", "+=", "2"}], ";", "\[IndentingNewLine]", 
+                  RowBox[{"SEn", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                  RowBox[{"PPn", "+=", "1"}], ";"}], "\[IndentingNewLine]", 
+                 ",", 
+                 RowBox[{"{", 
+                  RowBox[{"i2", ",", "splitsN"}], "}"}]}], "]"}]}], 
+              "\[IndentingNewLine]", "]"}], ";"}]}], "\[IndentingNewLine]", 
+           "]"}], ";", "\[IndentingNewLine]", "\"\<DUPLICATION\>\"", ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"seDuplicated", "=", 
+           RowBox[{"chooseSE2", "[", 
+            RowBox[{"SEinSet", ",", 
+             RowBox[{"Floor", "[", 
+              RowBox[{"pd", "*", "PPn", "*", 
+               RowBox[{"(", 
+                RowBox[{"PPn", "-", "1"}], ")"}]}], "]"}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"SEinSetTemp", "=", "SEinSet"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"seDupN", "=", 
+           RowBox[{"Length", "[", "seDuplicated", "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"seDupN", ">", "0"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"Do", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"SEind", "=", 
+                RowBox[{"seDuplicated", "[", 
+                 RowBox[{"[", "i1", "]"}], "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"SEindSym", "=", 
+                RowBox[{"N2SSE", "[", "SEind", "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"SEinSym", "=", 
+                RowBox[{"N2SSE", "[", "SEin", "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"IGin1Sym", "=", 
+                RowBox[{
+                 RowBox[{"SEset", "[", 
+                  RowBox[{"[", "SEind", "]"}], "]"}], "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+               RowBox[{"IGin2Sym", "=", 
+                RowBox[{
+                 RowBox[{"SEset", "[", 
+                  RowBox[{"[", "SEind", "]"}], "]"}], "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+               RowBox[{"IGin1", "=", 
+                RowBox[{"S2N", "[", "IGin1Sym", "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"IGin2", "=", 
+                RowBox[{"S2N", "[", "IGin2Sym", "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"IGinSym", "=", 
+                RowBox[{"N2S", "[", "IGin", "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"AppendTo", "[", 
+                RowBox[{"SEset", ",", 
+                 RowBox[{"{", 
+                  RowBox[{"IGinSym", ",", "IGin2Sym"}], "}"}]}], "]"}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"AppendTo", "[", 
+                RowBox[{"SEinSet", ",", "SEin"}], "]"}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"AppendTo", "[", 
+                RowBox[{"IGset", ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"SEindSym", ",", "SEinSym"}], "}"}]}], "}"}], ",", 
+                   RowBox[{"{", "}"}], ",", 
+                   RowBox[{"{", "}"}]}], "}"}]}], "]"}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{"SEin", "+=", "1"}], ";", "\[IndentingNewLine]", 
+               RowBox[{"SEn", "+=", "1"}], ";", "\[IndentingNewLine]", 
+               RowBox[{"IGin", "+=", "1"}], ";", "\[IndentingNewLine]", 
+               RowBox[{"IGn", "+=", "1"}], ";", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", "IGin2", "]"}], "]"}], "=", 
+                RowBox[{"ReplaceAll", "[", 
+                 RowBox[{
+                  RowBox[{"IGset", "[", 
+                   RowBox[{"[", "IGin2", "]"}], "]"}], ",", 
+                  RowBox[{"SEindSym", "\[Rule]", "SEinSym"}]}], "]"}]}], ";", 
+               "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"SEset", "[", 
+                 RowBox[{"[", "SEind", "]"}], "]"}], "=", 
+                RowBox[{"ReplaceAll", "[", 
+                 RowBox[{
+                  RowBox[{"SEset", "[", 
+                   RowBox[{"[", "SEind", "]"}], "]"}], ",", 
+                  RowBox[{"IGin2Sym", "\[Rule]", "IGinSym"}]}], "]"}]}], 
+               ";"}], "\[IndentingNewLine]", ",", 
+              RowBox[{"{", 
+               RowBox[{"i1", ",", "seDupN"}], "}"}]}], "]"}]}], 
+           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", "\"\<SINGLE PSB PROPAGATION\>\"", ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"PSBn", ">", "0"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"newPSBpropInSet", "=", 
+              RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"newPSB", "=", 
+              RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"Do", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"\"\<FIRST PSB RUN\>\"", ";", "\[IndentingNewLine]", 
+                RowBox[{"PSBloc", "=", 
+                 RowBox[{"PSBinSet", "[", 
+                  RowBox[{"[", "i3", "]"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"PSBlocSym", "=", 
+                 RowBox[{"N2S", "[", "PSBloc", "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"PSB", "=", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                   RowBox[{"[", "2", "]"}], "]"}], "[", 
+                  RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"IGset", "[", 
+                   RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                  RowBox[{"[", "2", "]"}], "]"}], "=", 
+                 RowBox[{"Drop", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", "1"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"PSBseFROM", "=", 
+                 RowBox[{"Flatten", "[", 
+                  RowBox[{
+                   RowBox[{"Transpose", "[", "PSB", "]"}], "[", 
+                   RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"SEadj", "=", 
+                 RowBox[{"DeleteSubset", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", "PSBseFROM"}], 
+                  "]"}]}], ";", "\[IndentingNewLine]", 
+                RowBox[{"SEadjN", "=", 
+                 RowBox[{"Length", "[", "SEadj", "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"SEadjN", ">", "0"}], ",", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"SEadjSet", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"IGindPropSet1", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"S2N", "[", 
+                    RowBox[{
+                    RowBox[{"SEadjSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "]"}], "\[Equal]", 
+                    "PSBloc"}], ",", 
+                    RowBox[{"Drop", "[", 
+                    RowBox[{
+                    RowBox[{"SEadjSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    RowBox[{"{", "1", "}"}]}], "]"}], ",", 
+                    RowBox[{"Drop", "[", 
+                    RowBox[{
+                    RowBox[{"SEadjSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    RowBox[{"{", "2", "}"}]}], "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"IGindPropSet", "=", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"S2N", ",", 
+                    RowBox[{"Flatten", "[", "IGindPropSet1", "]"}]}], "]"}]}],
+                    ";", "\[IndentingNewLine]", 
+                   RowBox[{"newSEset", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"Append", "[", 
+                    RowBox[{
+                    RowBox[{"IGindPropSet1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"SEin1", "=", 
+                    RowBox[{"SEin", "-", "1"}]}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"newSEinSet", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"N2SSE", "[", 
+                    RowBox[{"SEin1", "+", "i1"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}], ">", "0"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PSBlocN", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}]}], "]"}]}], 
+                    "]"}], "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i2", ",", "PSBlocN"}], "}"}]}], "]"}]}]}], "]"}],
+                     ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}], ">", "0"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PSBlocN", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}]}], "]"}]}], 
+                    "]"}], "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i2", ",", "PSBlocN"}], "}"}]}], "]"}]}]}], 
+                    "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"seReplace", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "\[Rule]", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"AppendTo", "[", 
+                    RowBox[{"IGset", ",", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], ",", "seReplace", 
+                    ",", "5"}], "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"PPs1", "=", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "PPs1", "]"}], ">", "0"}], ",", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"PPs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], "=", 
+                    RowBox[{"ReplaceAll", "[", 
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"PPs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"PSBlocSym", "\[Rule]", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "}"}]}], "]"}]}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "PPs1", "]"}]}], "}"}]}], "]"}]}], 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"SEs1", "=", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "SEs1", "]"}], ">", "0"}], ",", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], "=", 
+                    RowBox[{"ReplaceAll", "[", 
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"PSBlocSym", "\[Rule]", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "}"}]}], "]"}]}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "SEs1", "]"}]}], "}"}]}], "]"}]}], 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"UpdatePSBconnectionsDueToBifurcations", "[", 
+                    RowBox[{"IGset", ",", "IGin", ",", "PSB", ",", "PSBloc"}],
+                     "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"newPSBPropN", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSBpropInSet", ",", "IGin"}], "]"}], ";"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "newPSBPropN"}], "}"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"newPSBn", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSB", ",", "IGin"}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "newPSBn"}], "}"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "}"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "}"}]}], "}"}]}], 
+                    "}"}]}], "]"}], ";", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSB", ",", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"SEset", "=", 
+                    RowBox[{"Join", "[", 
+                    RowBox[{"SEset", ",", "newSEset"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"SEinSet", "=", 
+                    RowBox[{"Join", "[", 
+                    RowBox[{"SEinSet", ",", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"S2N", ",", "newSEinSet"}], "]"}]}], "]"}]}], ";",
+                    "\[IndentingNewLine]", 
+                   RowBox[{"SEin", "+=", "SEadjN"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"SEn", "+=", "SEadjN"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"IGn", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"IGin", "+=", "1"}], ";"}], "\[IndentingNewLine]", 
+                  ",", "\[IndentingNewLine]", 
+                  RowBox[{
+                   RowBox[{"AppendTo", "[", 
+                    RowBox[{"IGset", ",", 
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}]}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"PPs1", "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"PPs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "PPs1", "]"}]}], "}"}]}], "]"}], 
+                   ";", "\[IndentingNewLine]", 
+                   RowBox[{"SEs1", "=", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], "=", 
+                    RowBox[{"ReplaceAll", "[", 
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"PSBlocSym", "\[Rule]", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "}"}]}], "]"}]}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "SEs1", "]"}]}], "}"}]}], "]"}], 
+                   ";", "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"UpdatePSBconnectionsDueToBifurcations", "[", 
+                    RowBox[{"IGset", ",", "IGin", ",", "PSB", ",", "PSBloc"}],
+                     "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"newPSBPropN", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"newPSBPropN", ">", "0"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSBpropInSet", ",", "IGin"}], "]"}], ";"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "newPSBPropN"}], "}"}]}], "]"}], 
+                    ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"newPSBn", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"newPSBn", ">", "0"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSB", ",", "IGin"}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "newPSBn"}], "}"}]}], "]"}], ";"}]}], 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"IGn", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"IGin", "+=", "1"}], ";"}]}], 
+                 "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                "\"\<END FIRST PSB RUN\>\"", ";"}], "\[IndentingNewLine]", 
+               ",", 
+               RowBox[{"{", 
+                RowBox[{"i3", ",", "PSBn"}], "}"}]}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"PSBnew1", "=", "newPSB"}], ";", "\[IndentingNewLine]", 
+             RowBox[{"newPSBPropTot", "=", 
+              RowBox[{"Length", "[", "newPSBpropInSet", "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"newPSBPropTot", ">", "0"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"newPSB", "=", 
+                 RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+                RowBox[{"Do", "[", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{
+                  "\"\<SECOND PSB RUN\>\"", ";", "\[IndentingNewLine]", 
+                   RowBox[{"PSBloc", "=", 
+                    RowBox[{"newPSBpropInSet", "[", 
+                    RowBox[{"[", "i3", "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"PSBlocSym", "=", 
+                    RowBox[{"N2S", "[", "PSBloc", "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"PSB", "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"Drop", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", "1"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"PSBseFROM", "=", 
+                    RowBox[{"Flatten", "[", 
+                    RowBox[{
+                    RowBox[{"Transpose", "[", "PSB", "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"SEadj", "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", "PSBseFROM"}], 
+                    "]"}]}], ";", "\[IndentingNewLine]", 
+                   RowBox[{"SEadjN", "=", 
+                    RowBox[{"Length", "[", "SEadj", "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"SEadjN", ">", "0"}], ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"SEadjSet", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"IGindPropSet1", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"S2N", "[", 
+                    RowBox[{
+                    RowBox[{"SEadjSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "]"}], "==", "PSBloc"}], 
+                    ",", 
+                    RowBox[{"Drop", "[", 
+                    RowBox[{
+                    RowBox[{"SEadjSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    RowBox[{"{", "1", "}"}]}], "]"}], ",", 
+                    RowBox[{"Drop", "[", 
+                    RowBox[{
+                    RowBox[{"SEadjSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    RowBox[{"{", "2", "}"}]}], "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"IGindPropSet", "=", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"S2N", ",", 
+                    RowBox[{"Flatten", "[", "IGindPropSet1", "]"}]}], "]"}]}],
+                     ";", "\[IndentingNewLine]", 
+                    RowBox[{"newSEset", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"Append", "[", 
+                    RowBox[{
+                    RowBox[{"IGindPropSet1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"SEin1", "=", 
+                    RowBox[{"SEin", "-", "1"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"newSEinSet", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"N2SSE", "[", 
+                    RowBox[{"SEin1", "+", "i1"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}], ">", "0"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PSBlocN", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}]}], "]"}]}], 
+                    "]"}], "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i2", ",", "PSBlocN"}], "}"}]}], "]"}]}]}], "]"}],
+                     ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}], ">", "0"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"PSBlocN", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"MemberQ", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "[", 
+                    RowBox[{"[", "i2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}]}], "]"}]}], 
+                    "]"}], "\[IndentingNewLine]", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i2", ",", "PSBlocN"}], "}"}]}], "]"}]}]}], 
+                    "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"seReplace", "=", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "\[Rule]", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"IGset", ",", 
+                    RowBox[{"Replace", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], ",", "seReplace", 
+                    ",", "5"}], "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"PPs1", "=", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "PPs1", "]"}], ">", "0"}], ",", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"PPs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], "=", 
+                    RowBox[{"ReplaceAll", "[", 
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"PPs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"PSBlocSym", "\[Rule]", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "}"}]}], "]"}]}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "PPs1", "]"}]}], "}"}]}], "]"}]}], 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"SEs1", "=", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Length", "[", "SEs1", "]"}], ">", "0"}], ",", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], "=", 
+                    RowBox[{"ReplaceAll", "[", 
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"PSBlocSym", "\[Rule]", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "}"}]}], "]"}]}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "SEs1", "]"}]}], "}"}]}], "]"}]}], 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"UpdatePSBconnectionsDueToBifurcations", "[", 
+                    RowBox[{"IGset", ",", "IGin", ",", "PSB", ",", "PSBloc"}],
+                     "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"newPSBn", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSB", ",", "IGin"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "newPSBn"}], "}"}]}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"SEadj", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "}"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"newSEinSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "}"}]}], "}"}]}], 
+                    "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSB", ",", 
+                    RowBox[{"IGindPropSet", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "SEadjN"}], "}"}]}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"SEset", "=", 
+                    RowBox[{"Join", "[", 
+                    RowBox[{"SEset", ",", "newSEset"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"SEinSet", "=", 
+                    RowBox[{"Join", "[", 
+                    RowBox[{"SEinSet", ",", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{"S2N", ",", "newSEinSet"}], "]"}]}], "]"}]}], ";",
+                     "\[IndentingNewLine]", 
+                    RowBox[{"SEin", "+=", "SEadjN"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"SEn", "+=", "SEadjN"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"IGn", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"IGin", "+=", "1"}], ";"}], "\[IndentingNewLine]",
+                     ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"IGset", ",", 
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}]}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"PPs1", "=", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{
+                    RowBox[{"PPset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"PPs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "PPs1", "]"}]}], "}"}]}], "]"}], 
+                    ";", "\[IndentingNewLine]", 
+                    RowBox[{"SEs1", "=", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], "=", 
+                    RowBox[{"ReplaceAll", "[", 
+                    RowBox[{
+                    RowBox[{"SEset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"S2N", "[", 
+                    RowBox[{"SEs1", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"PSBlocSym", "\[Rule]", 
+                    RowBox[{"N2S", "[", "IGin", "]"}]}], "}"}]}], "]"}]}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", 
+                    RowBox[{"Length", "[", "SEs1", "]"}]}], "}"}]}], "]"}], 
+                    ";", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "=", 
+                    RowBox[{"DeleteSubset", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "PSBloc", "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"PSB", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"UpdatePSBconnectionsDueToBifurcations", "[", 
+                    RowBox[{"IGset", ",", "IGin", ",", "PSB", ",", "PSBloc"}],
+                     "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"newPSBn", "=", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", "IGin", "]"}], "]"}], "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"newPSB", ",", "IGin"}], "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i1", ",", "newPSBn"}], "}"}]}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"IGn", "+=", "1"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"IGin", "+=", "1"}], ";"}]}], 
+                    "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+                   "\[IndentingNewLine]", "\"\<END SECOND PSB RUN\>\"", ";"}],
+                   "\[IndentingNewLine]", ",", 
+                  RowBox[{"{", 
+                   RowBox[{"i3", ",", "newPSBPropTot"}], "}"}]}], "]"}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"PSBnew2", "=", "newPSB"}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"PSBinSet", "=", 
+                 RowBox[{"Join", "[", 
+                  RowBox[{"PSBnew1", ",", "PSBnew2"}], "]"}]}], ";"}], 
+               "\[IndentingNewLine]", ",", 
+               RowBox[{
+                RowBox[{"PSBinSet", "=", "PSBnew1"}], ";"}]}], "]"}], ";", 
+             "\[IndentingNewLine]", "\[IndentingNewLine]", 
+             RowBox[{"totHostIGs", "=", 
+              RowBox[{"Union", "[", "PSBinSet", "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"totHostIGsN", "=", 
+              RowBox[{"Length", "[", "totHostIGs", "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Do", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"IGset", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"totHostIGs", "[", 
+                   RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "=", 
+                RowBox[{"Append", "[", 
+                 RowBox[{
+                  RowBox[{"Drop", "[", 
+                   RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"totHostIGs", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], ",", 
+                    RowBox[{"{", "2", "}"}]}], "]"}], ",", 
+                  RowBox[{"{", "}"}]}], "]"}]}], ",", 
+               RowBox[{"{", 
+                RowBox[{"i1", ",", "totHostIGsN"}], "}"}]}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"PSBn", "=", 
+              RowBox[{"Length", "[", "PSBinSet", "]"}]}], ";"}]}], 
+           "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"hyperEdgeEvSet", ",", 
+            RowBox[{"Join", "[", 
+             RowBox[{"PPset", ",", "SEset"}], "]"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"PPsetEv", ",", "PPset"}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"SEsetEv", ",", "SEset"}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"IGsetEv", ",", "IGset"}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Sow", "[", 
+           RowBox[{"hyperEdgeEvSet", "[", 
+            RowBox[{"[", "i4", "]"}], "]"}], "]"}], ";"}], 
+         "\[IndentingNewLine]", ",", 
+         RowBox[{"{", 
+          RowBox[{"i4", ",", "TS"}], "}"}]}], "]"}], ";"}], 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "]"}], "[", 
+     RowBox[{"[", "2", "]"}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.884324332081235*^9, 3.884324461753331*^9}, {
+  3.88433423383407*^9, 3.884334305972731*^9}, {3.8843372366208673`*^9, 
+  3.8843373750737314`*^9}},ExpressionUUID->"19c2c4bb-f5ec-4db0-887c-\
+193810507fd0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["3. Radial extraction algorithms", "Subsection",
+ CellChangeTimes->{{3.8843271663404846`*^9, 3.884327167468604*^9}, {
+  3.8843272722836714`*^9, 3.8843272807783813`*^9}, {3.884340840709938*^9, 
+  3.8843408432566757`*^9}},ExpressionUUID->"dc6dc001-9795-4098-88e2-\
+53a5e0de218f"],
+
+Cell["\<\
+Extract single radial graph from one PP at a given instance in time.\
+\>", "Text",
+ CellChangeTimes->{{3.884327553263752*^9, 
+  3.884327574436242*^9}},ExpressionUUID->"b5b3f236-f7e5-4e04-b4cf-\
+077fbba0d859"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"extractSingleRadialHyperGraph", "[", 
+     RowBox[{
+     "PPset_", ",", "SEset_", ",", "IGset_", ",", "PP1_", ",", 
+      "RadialMaxScale_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Reap", "[", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"IGset1Sym", "=", 
+         RowBox[{"PPset", "[", 
+          RowBox[{"[", "PP1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"radialHypergraph", "=", 
+         RowBox[{"{", "IGset1Sym", "}"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"seFromSet", "=", 
+         RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"radialHypergraphFinished", "=", "False"}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"IGset1", "=", 
+         RowBox[{"Map", "[", 
+          RowBox[{"S2N", ",", "IGset1Sym"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"connectedIGn1", "=", 
+         RowBox[{"Length", "[", "IGset1Sym", "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"seOnIGs", "=", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"IGset", "[", 
+              RowBox[{"[", 
+               RowBox[{"IGset1", "[", 
+                RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], "[", 
+            RowBox[{"[", "2", "]"}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i1", ",", "connectedIGn1"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"Do", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"SEindSetSym", "=", 
+            RowBox[{"Flatten", "[", "seOnIGs", "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"seOnIGindex", "=", 
+            RowBox[{"Map", "[", 
+             RowBox[{"S2N", ",", "SEindSetSym"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"seOnIGLength", "=", 
+            RowBox[{"Map", "[", 
+             RowBox[{"Length", ",", "seOnIGs"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"connectedIGn1", "=", 
+            RowBox[{"Length", "[", "seOnIGLength", "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"IGmapFrom", "=", 
+            RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Do", "[", 
+            RowBox[{
+             RowBox[{"Do", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"AppendTo", "[", 
+                 RowBox[{"IGmapFrom", ",", 
+                  RowBox[{"IGset1Sym", "[", 
+                   RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ";"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"i2", ",", 
+                 RowBox[{"seOnIGLength", "[", 
+                  RowBox[{"[", "i1", "]"}], "]"}]}], "}"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i1", ",", "connectedIGn1"}], "}"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"newSEnumber", "=", 
+            RowBox[{"Length", "[", "seOnIGindex", "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"seConnect", "=", 
+            RowBox[{"Table", "[", 
+             RowBox[{
+              RowBox[{"SEset", "[", 
+               RowBox[{"[", 
+                RowBox[{"seOnIGindex", "[", 
+                 RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"i1", ",", "newSEnumber"}], "}"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Set", "[", 
+            RowBox[{"radialHypergraph", ",", 
+             RowBox[{"Join", "[", 
+              RowBox[{"radialHypergraph", ",", "seConnect"}], "]"}]}], "]"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"newIGindex", "=", 
+            RowBox[{"Table", "[", 
+             RowBox[{
+              RowBox[{"DeleteSubset", "[", 
+               RowBox[{
+                RowBox[{"seConnect", "[", 
+                 RowBox[{"[", "i1", "]"}], "]"}], ",", 
+                RowBox[{"IGmapFrom", "[", 
+                 RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"i1", ",", "newSEnumber"}], "}"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"newIGindex1", "=", 
+            RowBox[{"Flatten", "[", "newIGindex", "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"IGset2Sym", "=", "newIGindex1"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"IGset2", "=", 
+            RowBox[{"Map", "[", 
+             RowBox[{"S2N", ",", "IGset2Sym"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"newSEset2", "=", 
+            RowBox[{"Table", "[", 
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGset2", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                   RowBox[{"[", "1", "]"}], "]"}], "[", 
+                  RowBox[{"[", "1", "]"}], "]"}], "\[Equal]", 
+                 RowBox[{"{", "}"}]}], ",", 
+                RowBox[{"DeleteSubset", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"IGset", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"IGset2", "[", 
+                    RowBox[{"[", "i1", "]"}], "]"}], "]"}], "]"}], "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "[", 
+                   RowBox[{"[", "2", "]"}], "]"}], ",", 
+                  RowBox[{"SEindSetSym", "[", 
+                   RowBox[{"[", "i1", "]"}], "]"}]}], "]"}], ",", 
+                RowBox[{"{", "}"}]}], "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"i1", ",", "newSEnumber"}], "}"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"branchTermInd", "=", 
+            RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Do", "[", 
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"newSEset2", "[", 
+                 RowBox[{"[", "i1", "]"}], "]"}], "\[Equal]", 
+                RowBox[{"{", "}"}]}], ",", 
+               RowBox[{"AppendTo", "[", 
+                RowBox[{"branchTermInd", ",", 
+                 RowBox[{"{", "i1", "}"}]}], "]"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i1", ",", "newSEnumber"}], "}"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"IGset3", "=", 
+            RowBox[{"Delete", "[", 
+             RowBox[{"IGset2", ",", "branchTermInd"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"newSEset3", "=", 
+            RowBox[{"Delete", "[", 
+             RowBox[{"newSEset2", ",", "branchTermInd"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"newSEset2N", "=", 
+            RowBox[{"Map", "[", 
+             RowBox[{"S2N", ",", 
+              RowBox[{"Flatten", "[", "newSEset3", "]"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"newSEn", "=", 
+            RowBox[{"Length", "[", "newSEset2N", "]"}]}], ";", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Flatten", "[", "newSEset3", "]"}], "\[Equal]", 
+              RowBox[{"{", "}"}]}], ",", 
+             RowBox[{"Break", "[", "]"}]}], "]"}], ";", "\[IndentingNewLine]",
+            "\[IndentingNewLine]", 
+           RowBox[{"IGset1Sym", "=", 
+            RowBox[{"Map", "[", 
+             RowBox[{"N2S", ",", "IGset3"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"seOnIGs", "=", "newSEset3"}], ";"}], 
+          "\[IndentingNewLine]", ",", 
+          RowBox[{"{", 
+           RowBox[{"i1", ",", "RadialMaxScale"}], "}"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Sow", "[", "radialHypergraph", "]"}]}], "]"}], "[", 
+      RowBox[{"[", "2", "]"}], "]"}], "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.884327585913313*^9, 3.8843277245031548`*^9}, {
+  3.8843278041419563`*^9, 3.8843278490102344`*^9}, {3.8843279072883596`*^9, 
+  3.8843279137284565`*^9}, {3.8843281373167305`*^9, 3.884328161639908*^9}, {
+  3.8843331429682856`*^9, 3.8843331444064465`*^9}, {3.8843341333221903`*^9, 
+  3.8843341357730303`*^9}},
+ CellLabel->
+  "In[204]:=",ExpressionUUID->"d5418a32-4c27-4a69-ae75-f9e01d28c58b"],
+
+Cell["Visualise radial subgraphs", "Text",
+ CellChangeTimes->{{3.884337525765731*^9, 
+  3.884337536880341*^9}},ExpressionUUID->"e286732a-84a1-48d7-97ea-\
+4c74090d5be8"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"\"\<Extract set of Radial IE from hypergraph\>\"", ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"extractSetRadialHyperGraph", "[", 
+    RowBox[{
+    "PPset_", ",", "SEset_", ",", "IGset_", ",", "PPsChosen_", ",", 
+     "RadialMaxScale_"}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Reap", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"PPsChosenN", "=", 
+        RowBox[{"Length", "[", "PPsChosen", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Sow", "[", 
+           RowBox[{
+            RowBox[{"extractSingleRadialHyperGraph", "[", 
+             RowBox[{"PPset", ",", "SEset", ",", "IGset", ",", 
+              RowBox[{"PPsChosen", "[", 
+               RowBox[{"[", "i1", "]"}], "]"}], ",", "RadialMaxScale"}], 
+             "]"}], "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "]"}], ";"}], 
+         "\[IndentingNewLine]", ",", 
+         RowBox[{"{", 
+          RowBox[{"i1", ",", "PPsChosenN"}], "}"}]}], "]"}]}], 
+      "\[IndentingNewLine]", "]"}], "[", 
+     RowBox[{"[", "2", "]"}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "\"\<Extract composite graph of multiple radial graphs. (Possible \
+correlation to multiple sporing locations.)\>\"", ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"plotMultiSeededRadialHyperGraph", "[", 
+     RowBox[{
+     "PPset_", ",", "SEset_", ",", "IGset_", ",", "PPsChosen_", ",", 
+      "RadialMaxScale_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Reap", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"extractedRadialGraph", "=", 
+         RowBox[{"Flatten", "[", 
+          RowBox[{
+           RowBox[{"extractSetRadialHyperGraph", "[", 
+            RowBox[{
+            "PPset", ",", "SEset", ",", "IGset", ",", "PPsChosen", ",", 
+             "RadialMaxScale"}], "]"}], ",", "1"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Sow", "[", "extractedRadialGraph", "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"makeGraph4", "[", "extractedRadialGraph", "]"}], "]"}]}], 
+       "\[IndentingNewLine]", "]"}], "[", 
+      RowBox[{"[", "2", "]"}], "]"}], "[", 
+     RowBox[{"[", "1", "]"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "\"\<Create radial animation of a given PP. You must include the full PP SE \
+and IG evolution sets obtained by running function \
+'growSERDmodelFuncSlowGrowth1[]'. PP number must not exceed max PP \
+number.\>\"", ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"animateRadialGraphGrowth", "[", 
+    RowBox[{
+    "PPsetEv_", ",", "SEsetEv_", ",", "IGsetEv_", ",", "PP1_", ",", "TS_", 
+     ",", "RadialMaxScale_"}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Reap", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"TS1", "=", "0"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Do", "[", 
+        RowBox[{
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"PP1", "\[LessEqual]", 
+            RowBox[{"Length", "[", 
+             RowBox[{"PPsetEv", "[", 
+              RowBox[{"[", "i1", "]"}], "]"}], "]"}]}], ",", 
+           RowBox[{
+            RowBox[{"TS1", "=", "i1"}], ";", 
+            RowBox[{"Break", "[", "]"}]}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"i1", ",", "TS"}], "}"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"TS2", "=", 
+        RowBox[{"TS", "-", "TS1"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"radialHGeV", "=", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"extractSingleRadialHyperGraph", "[", 
+            RowBox[{
+             RowBox[{"PPsetEv", "[", 
+              RowBox[{"[", 
+               RowBox[{"TS1", "+", "i1"}], "]"}], "]"}], ",", 
+             RowBox[{"SEsetEv", "[", 
+              RowBox[{"[", 
+               RowBox[{"TS1", "+", "i1"}], "]"}], "]"}], ",", 
+             RowBox[{"IGsetEv", "[", 
+              RowBox[{"[", 
+               RowBox[{"TS1", "+", "i1"}], "]"}], "]"}], ",", "PP1", ",", 
+             "RadialMaxScale"}], "]"}], "[", 
+           RowBox[{"[", "1", "]"}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i1", ",", "TS2"}], "}"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Sow", "[", "radialHGeV", "]"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Print", "[", 
+        RowBox[{"ListAnimate", "[", 
+         RowBox[{"Map", "[", 
+          RowBox[{"makeGraph4", ",", "radialHGeV"}], "]"}], "]"}], "]"}]}], 
+      "\[IndentingNewLine]", "]"}], "[", 
+     RowBox[{"[", "2", "]"}], "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.884327903793645*^9, 3.8843280302065296`*^9}, {
+  3.884328076688283*^9, 3.884328077613454*^9}, {3.884328210768922*^9, 
+  3.8843282999964595`*^9}, {3.8843341467611303`*^9, 3.884334155461821*^9}, {
+  3.884337430279928*^9, 3.8843374937895503`*^9}},
+ CellLabel->
+  "In[412]:=",ExpressionUUID->"a2c613db-ec39-4704-a19e-0db0574254c6"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1140.6, 567.6},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"12.2 for Microsoft Windows (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"bc671a2d-2160-48f9-9ffc-8c0a95f3fbb2"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 178, 3, 67, "Section",ExpressionUUID->"d5971dd9-a1f1-41c2-baba-8f00600e169d"],
+Cell[CellGroupData[{
+Cell[783, 29, 221, 4, 54, "Subsection",ExpressionUUID->"c8d60623-4fed-4913-bbc8-803a507a9b73"],
+Cell[1007, 35, 309, 5, 35, "Text",ExpressionUUID->"6999edb8-dbd4-47ab-8f76-ff15a2ffe26a"],
+Cell[1319, 42, 24279, 630, 1297, "Input",ExpressionUUID->"f9a32e44-29bd-4f44-8bbf-3d9b140f236a"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[25635, 677, 232, 4, 54, "Subsection",ExpressionUUID->"5fb59b86-eb82-48b8-a225-900661358f58"],
+Cell[25870, 683, 513, 14, 81, "Text",ExpressionUUID->"a4ac194f-777c-4b14-ba83-52d06c9fdb83"],
+Cell[26386, 699, 90787, 1971, 5489, "Input",ExpressionUUID->"19c2c4bb-f5ec-4db0-887c-193810507fd0"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[117210, 2675, 282, 4, 54, "Subsection",ExpressionUUID->"dc6dc001-9795-4098-88e2-53a5e0de218f"],
+Cell[117495, 2681, 218, 5, 35, "Text",ExpressionUUID->"b5b3f236-f7e5-4e04-b4cf-077fbba0d859"],
+Cell[117716, 2688, 9053, 207, 965, "Input",ExpressionUUID->"d5418a32-4c27-4a69-ae75-f9e01d28c58b"],
+Cell[126772, 2897, 168, 3, 35, "Text",ExpressionUUID->"e286732a-84a1-48d7-97ea-4c74090d5be8"],
+Cell[126943, 2902, 5336, 133, 575, "Input",ExpressionUUID->"a2c613db-ec39-4704-a19e-0db0574254c6"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

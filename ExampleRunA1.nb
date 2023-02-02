@@ -1,0 +1,222 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9038,        214]
+NotebookOptionsPosition[      7941,        189]
+NotebookOutlinePosition[      8359,        205]
+CellTagsIndexPosition[      8316,        202]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Examples of SERD network visualization functions", "Section",
+ CellChangeTimes->{{3.8843396526166353`*^9, 3.8843396806734147`*^9}, {
+  3.884340879666703*^9, 
+  3.884340880266207*^9}},ExpressionUUID->"5a2d1808-4265-4955-928f-\
+3eee3774bc05"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+  "\"\<Start by defining variables of the system.\nps - The rate of splitting \
+and is the probability that one split will occur in a TS. Each PP split for a \
+PP is constrained to be at least 2 TS apart.\npd - The growth rate function \
+(rate of duplication) which in this case is controlled to be a fraction of \
+the maximum number of IEs between PPs. This allows for slow growth, and for \
+PSBs to propagate, since reductions are not implemented to cancel them out.\n\
+Both probability functions are changable and could correspond to certain \
+enforced scaling or growth rate reduction effects of the system.\nTS - The \
+number of Time Steps that the system runs for.\nSEinitial - The initial \
+number of SEs inbetween the initial two PPs. (Starting state)\>\"", ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ps", "=", "0.1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pd", "=", "0.1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"TS", "=", "100"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"SEinitial", "=", "1"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"hyperGraphEv1", "=", 
+   RowBox[{"growSERDmodelFuncSlowGrowth1", "[", 
+    RowBox[{"ps", ",", "pd", ",", "TS", ",", "SEinitial"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"makeGraph4", "[", 
+  RowBox[{"hyperGraphEv1", "[", 
+   RowBox[{"[", "TS", "]"}], "]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.884324486334254*^9, 3.8843245394064875`*^9}, {
+  3.8843246003116875`*^9, 3.884324622628123*^9}, {3.8843246554413147`*^9, 
+  3.8843246669900727`*^9}, {3.88432481277501*^9, 3.884324834430797*^9}, {
+  3.884328864399528*^9, 3.884328874668435*^9}, {3.884337623956394*^9, 
+  3.884337732168641*^9}, {3.8843377657396793`*^9, 3.8843377851242766`*^9}, {
+  3.8843378481697454`*^9, 3.88433797203172*^9}, {3.8843380299111924`*^9, 
+  3.884338234834694*^9}},
+ CellLabel->
+  "In[432]:=",ExpressionUUID->"44a96052-63fa-4da8-b661-65f463aab493"],
+
+Cell[BoxData[{
+ RowBox[{"\"\<A video of the evolution branch this creates can be generated \
+by the following function.\>\"", ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"ListAnimate", "[", 
+    RowBox[{"Map", "[", 
+     RowBox[{"makeGraph4", ",", "hyperGraphEv1"}], "]"}], "]"}], "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.884339696034374*^9, 3.884339753839428*^9}},
+ CellLabel->
+  "In[439]:=",ExpressionUUID->"9b0eb74f-36fe-4534-8ef0-0eae47b0bb3f"],
+
+Cell[BoxData[{
+ RowBox[{"\"\<After running that code, PPset, SEset and IGset will be \
+determined as the corresponding sets of the final state.\>\"", 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"\"\<You can choose a different value using the following \
+function.\>\"", ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"updatePPSEIGsets", "[", "100", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"\"\<This will give the PPset, SEset and IGset after the 100th TS.\>\
+\"", ";"}]}], "Input",
+ CellChangeTimes->{{3.8843277460862417`*^9, 3.8843277808995824`*^9}, {
+   3.8843282886541204`*^9, 3.8843282891427574`*^9}, 3.88432894066635*^9, {
+   3.884338265439175*^9, 3.8843383845019164`*^9}, {3.8843384645581684`*^9, 
+   3.8843384725294757`*^9}, {3.8843385141288843`*^9, 3.884338563525011*^9}, {
+   3.8843388323406973`*^9, 3.8843388366915803`*^9}},
+ CellLabel->
+  "In[441]:=",ExpressionUUID->"a59e3b15-bf19-4166-ae81-68f1bad6a67a"],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+   "\"\<This radial hypergraph edge set can then be generated using the \
+following function\>\"", ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+   "\"\<You must give the PP you wish the radial graph to be centred around \
+(PP1), as well as the max scale of the plots (RadialMaxScale)\>\"", ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"PP1", "=", "5"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"RadialMaxScale", "=", "100"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"RadHgraph", "=", 
+     RowBox[{
+      RowBox[{"extractSingleRadialHyperGraph", "[", 
+       RowBox[{
+       "PPset", ",", "SEset", ",", "IGset", ",", "PP1", ",", 
+        "RadialMaxScale"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"\"\<Plotted via the function makeGraph4[]\>\"", ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"makeGraph4", "[", "RadHgraph", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.884338583955948*^9, 3.8843388454890924`*^9}},
+ CellLabel->
+  "In[445]:=",ExpressionUUID->"23e10012-8073-452c-8ad7-66018b0eb26f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"\"\<Multi seeded radial hypergraphs can be visualised in a time \
+slice.\>\"", ";"}], "\[IndentingNewLine]", 
+ RowBox[{"\"\<A set of PPs is chosen and a combined radial graph is \
+generated. Make sure not to use indices that are larger than the number of \
+PPs in that time slice.\>\"", ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Length", "[", "PPset", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PPsChosen", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "3", ",", "9"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"plotMultiSeededRadialHyperGraph", "[", 
+   RowBox[{
+   "PPset", ",", "SEset", ",", "IGset", ",", "PPsChosen", ",", 
+    "RadialMaxScale"}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.8843389390475426`*^9, 3.884339013415244*^9}, {
+  3.8843390752411222`*^9, 3.8843391578183928`*^9}},
+ CellLabel->
+  "In[452]:=",ExpressionUUID->"cc1d7c5e-538e-48ae-88bf-21a032933e83"],
+
+Cell[BoxData["10"], "Output",
+ CellChangeTimes->{{3.8843391080339727`*^9, 3.884339151053849*^9}, 
+   3.884339890115733*^9},
+ CellLabel->
+  "Out[454]=",ExpressionUUID->"60c9a78c-909d-49e7-ae9b-b0499a1b5daf"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{"\"\<Animations of a given radial subgraph can be visualised using \
+the following function\>\"", ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "\"\<Here the evolution sets of PPsetEV, SEsetEv, and IGsetEv are required \
+(these can be obtained by running growSERDmodelFuncSlowGrowth1[] function), \
+as well as a PP and which TS to run up to. \nAgain ensure the index of PP you \
+wish to observe (PP1) the radial evolution of is less than the max number of \
+PPs up to the TS you specified.\>\"", ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PP1", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"TS", "=", "100"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"animateRadialGraphGrowth", "[", 
+    RowBox[{
+    "PPsetEv", ",", "SEsetEv", ",", "IGsetEv", ",", "PP1", ",", "TS", ",", 
+     "RadialMaxScale"}], "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.884339166012641*^9, 3.884339306741849*^9}, {
+   3.8843393592642546`*^9, 3.884339535943946*^9}, 3.884339795766153*^9},
+ CellLabel->
+  "In[457]:=",ExpressionUUID->"333d6e3c-2cd3-4803-b965-6f89af19d3c8"]
+}, Open  ]]
+},
+WindowSize->{1139.3999999999999`, 567.6},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"12.2 for Microsoft Windows (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"ebd51709-f163-49e2-b15f-8bae1bcbd1f0"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 246, 4, 67, "Section",ExpressionUUID->"5a2d1808-4265-4955-928f-3eee3774bc05"],
+Cell[829, 28, 2098, 41, 361, "Input",ExpressionUUID->"44a96052-63fa-4da8-b661-65f463aab493"],
+Cell[2930, 71, 490, 11, 49, "Input",ExpressionUUID->"9b0eb74f-36fe-4534-8ef0-0eae47b0bb3f"],
+Cell[3423, 84, 927, 16, 88, "Input",ExpressionUUID->"a59e3b15-bf19-4166-ae81-68f1bad6a67a"],
+Cell[4353, 102, 1186, 27, 185, "Input",ExpressionUUID->"23e10012-8073-452c-8ad7-66018b0eb26f"],
+Cell[CellGroupData[{
+Cell[5564, 133, 931, 19, 127, "Input",ExpressionUUID->"cc1d7c5e-538e-48ae-88bf-21a032933e83"],
+Cell[6498, 154, 206, 4, 32, "Output",ExpressionUUID->"60c9a78c-909d-49e7-ae9b-b0499a1b5daf"]
+}, Open  ]],
+Cell[6719, 161, 1206, 25, 224, "Input",ExpressionUUID->"333d6e3c-2cd3-4803-b965-6f89af19d3c8"]
+}, Open  ]]
+}
+]
+*)
+
