@@ -1,0 +1,173 @@
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+pd=1/3
+pr=1/3
+ps=1/2
+
+pt=pd+pr
+
+TS=5
+
+Elset = {
+    "p1" : ["x1"],
+    "p2" : ["x2"],
+    "s1" : ["x1","x2"]
+}
+
+PPn=2
+PPin=3
+PPIn=["p1","p2"]
+PPloss=[]
+
+SEn=1
+SEin=2
+SEIn=["s1"]
+SEloss=[]
+
+IGset = {
+    "x1" : ["p1","s1"],
+    "x2" : ["p2","s1"]
+}
+
+IGn=2
+IGin=3
+IGloss=[]
+
+PSBset = {}
+PSBn=0
+PSBIn=[]
+PSBloss=[]
+
+def repFunc(old,new,array):
+    for i1 in range(len(array)):
+        if array[i1]==old:
+            array[i1]=new
+            break
+    return array
+
+def removeEl(el,array):
+    for i1 in range(len(array)):
+        if array[i1]==el:
+            array.pop(i1)
+            break
+    return array
+
+def replaceSEin2PSBsuperpose(se,psbSet1,psbSet2):
+    for b1 in range(psbSet1):
+        for b2 in range(psbSet2):
+            ind=False
+            for x in range(psbSet2[b2]):
+                if psbSet2[b2][x]==se:
+                    psbSet2[b2].pop(x)
+                    for y in range(psbSet1[b1]):
+                        psbSet2[b2].append(psbSet1[b1][y])
+                    ind=True
+                    break
+            if ind==False:
+                psbSet1.append
+
+
+
+for t in range(TS):
+
+    "SE RUN"
+    SEnTemp=SEn
+    backShift=0
+    for s in range(SEn):
+        "SE ACTION"
+        rand=random.random()
+        if rand<pd:
+            "DUPLICATION"
+            sIn1=SEIn[s-backShift]
+            xIn1=Elset[sIn1][1]
+            sIn2="s"+str(SEin)
+            xIn2="x"+str(IGin)
+            Elset[sIn2]=[xIn2,Elset[sIn1][1]]
+            Elset[sIn1][1]=xIn2
+            SEIn.append(sIn2)
+            IGset[xIn2]=[sIn1,sIn2]
+            repFunc(sIn1,sIn2,IGset[xIn1])
+            if len(IGset[xIn1])>2:
+                if PSBset.get(xIn1)!=None:
+                    for x in range(len(PSBset[xIn1])):
+                        repFunc(sIn1,sIn2,PSBset[xIn1][x])
+            SEin+=1
+            IGin+=1
+            SEnTemp+=1
+            IGn+=1
+        elif rand<pt:
+            "REDUCTION"
+            sIn1=SEIn[s-backShift]
+            xIn1=Elset[sIn1][0]
+            xIn2=Elset[sIn1][1]
+            removeEl(sIn1,IGset[xIn1])
+            
+            for i1 in range(len(IGset[xIn2])):
+                repFunc(xIn2,xIn1,Elset[IGset[xIn2][i1]])
+            
+            "ALTER PSB"
+            if len(IGset[xIn2])>2:
+                if len(IGset[xIn1])<3:
+
+                    PSBset[xIn1]=PSBset[]
+
+
+            SEIn.pop(s-backShift)
+            Elset.pop(sIn1)
+            IGset.pop(xIn2)
+            SEloss.append(sIn1)
+            IGloss.append(xIn2)
+            SEnTemp-=1
+            IGn-=1
+            backShift+=1
+
+    SEn=SEnTemp
+
+
+    "PP RUN"
+    PPnTemp=PPn
+    for p in range(PPn):
+        "PP ACTION"
+        rand=random.random()
+        if rand<ps:
+            "SPLIT"
+            pIn1=PPIn[p]
+            pIn2="p"+str(PPin)
+            xIn1="x"+str(IGin)
+            xIn2="x"+str(IGin+1)
+            sIn1="s"+str(SEin)
+            IGset[xIn2]=[pIn2,sIn1]
+            IGset[xIn2]=[pIn1,sIn1]
+            Elset[pIn2]=Elset[pIn1]
+            for i1 in range(len(Elset[pIn1])):
+                "Create PSBs"
+                bIn1=Elset[pIn1][i1]
+                PSBset[bIn1]=removeEl(pIn1,IGset[Elset[pIn1][i1]])
+                IGset[Elset[pIn1][i1]].append(pIn2)
+                PSBIn.append(bIn1)
+                PSBn+=1
+            Elset[pIn1].append(xIn1)
+            Elset[pIn2].append(xIn2)
+            Elset[sIn1]=[xIn1,xIn2]
+            IGin+=2
+            SEin+=1
+            PPin+=1
+            IGn+=2
+            SEn+=1
+            PPnTemp+=1
+
+    "PSB RUN"
+    for b in range(PSBn):
+        bIn1=PSBIn[b]
+
+    HGedgeSet=list(Elset.values())
+    print(HGedgeSet)
+
+HGedgeSet=list(Elset.values())
+print(HGedgeSet)
+
+
+
+
+
