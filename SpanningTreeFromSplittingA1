@@ -1,49 +1,51 @@
 import random
 import matplotlib.pyplot as plt
 import numpy as np
-pd=1/3
-pr=1/3
-ps=1/2
 
-pt=pd+pr
-
-TS=5
-
-Elset = {
-    "p1" : ["x1"],
-    "p2" : ["x2"],
-    "s1" : ["x1","x2"]
-}
-
-PPn=2
-PPin=3
-PPIn=["p1","p2"]
-PPloss=[]
+TS=10
+pd=0.2
+ps=0.1
 
 SEn=1
 SEin=2
-SEIn=["s1"]
-SEloss=[]
+SEinSet=["s1"]
 
-IGset = {
+PPn=2
+PPin=3
+PPinSet=["p1","p2"]
+SEset = {
+    "s1" :  ["x1","x2"]
+}
+
+PPset= {
+    "p1" :  ["x1"],
+    "p2" :  ["x2"]
+}
+
+IGset={
     "x1" : ["p1","s1"],
-    "x2" : ["p2","s1"]
+    "x2" : ["s1","p2"]
 }
 
 IGn=2
 IGin=3
-IGloss=[]
 
-PSBset = {}
 PSBn=0
-PSBIn=[]
-PSBloss=[]
+PSBin=1
+PSBset={
+}
+PSBinSet=[]
 
-def repFunc(old,new,array):
+PPsSplitInd=[2,2]
+
+HGev=[]
+HGev.append(str(list(SEset.values())))
+
+def replaceEl(oldEl,newEl,array):
     for i1 in range(len(array)):
-        if array[i1]==old:
-            array[i1]=new
-            break
+        if array[i1]==oldEl:
+             array[i1]=newEl
+             break
     return array
 
 def removeEl(el,array):
@@ -53,121 +55,147 @@ def removeEl(el,array):
             break
     return array
 
-def replaceSEin2PSBsuperpose(se,psbSet1,psbSet2):
-    for b1 in range(psbSet1):
-        for b2 in range(psbSet2):
-            ind=False
-            for x in range(psbSet2[b2]):
-                if psbSet2[b2][x]==se:
-                    psbSet2[b2].pop(x)
-                    for y in range(psbSet1[b1]):
-                        psbSet2[b2].append(psbSet1[b1][y])
-                    ind=True
-                    break
-            if ind==False:
-                psbSet1.append
-
-
-
 for t in range(TS):
 
-    "SE RUN"
+    duplications=random.sample(SEinSet, PPn-1)
     SEnTemp=SEn
-    backShift=0
-    for s in range(SEn):
-        "SE ACTION"
-        rand=random.random()
-        if rand<pd:
-            "DUPLICATION"
-            sIn1=SEIn[s-backShift]
-            xIn1=Elset[sIn1][1]
-            sIn2="s"+str(SEin)
-            xIn2="x"+str(IGin)
-            Elset[sIn2]=[xIn2,Elset[sIn1][1]]
-            Elset[sIn1][1]=xIn2
-            SEIn.append(sIn2)
-            IGset[xIn2]=[sIn1,sIn2]
-            repFunc(sIn1,sIn2,IGset[xIn1])
-            if len(IGset[xIn1])>2:
-                if PSBset.get(xIn1)!=None:
-                    for x in range(len(PSBset[xIn1])):
-                        repFunc(sIn1,sIn2,PSBset[xIn1][x])
-            SEin+=1
-            IGin+=1
-            SEnTemp+=1
-            IGn+=1
-        elif rand<pt:
-            "REDUCTION"
-            sIn1=SEIn[s-backShift]
-            xIn1=Elset[sIn1][0]
-            xIn2=Elset[sIn1][1]
-            removeEl(sIn1,IGset[xIn1])
-            
-            for i1 in range(len(IGset[xIn2])):
-                repFunc(xIn2,xIn1,Elset[IGset[xIn2][i1]])
-            
-            "ALTER PSB"
-            if len(IGset[xIn2])>2:
-                if len(IGset[xIn1])<3:
-
-                    PSBset[xIn1]=PSBset[]
-
-
-            SEIn.pop(s-backShift)
-            Elset.pop(sIn1)
-            IGset.pop(xIn2)
-            SEloss.append(sIn1)
-            IGloss.append(xIn2)
-            SEnTemp-=1
-            IGn-=1
-            backShift+=1
-
+    for s in range(len(duplications)):
+        SEind=duplications[s]
+        IGin1=SEset[SEind][1]
+        IGin2="x"+str(IGin)
+        SEin1="s"+str(SEin)
+        SEset[SEind][1]=IGin2
+        SEset[SEin1]=[IGin2,IGin1]
+        IGset[IGin2]=[SEind,SEin1]
+        replaceEl(SEind,SEin1,IGset[IGin1])
+        if PSBset.get(IGin1)!=None:
+            if PSBset[IGin1]==SEind:
+                PSBset[IGin1]=SEin1
+        SEinSet.append(SEin1)
+        SEin+=1
+        SEnTemp+=1
+        IGin+=1
+        IGn+=1
     SEn=SEnTemp
 
-
-    "PP RUN"
     PPnTemp=PPn
     for p in range(PPn):
-        "PP ACTION"
         rand=random.random()
-        if rand<ps:
-            "SPLIT"
-            pIn1=PPIn[p]
-            pIn2="p"+str(PPin)
-            xIn1="x"+str(IGin)
-            xIn2="x"+str(IGin+1)
-            sIn1="s"+str(SEin)
-            IGset[xIn2]=[pIn2,sIn1]
-            IGset[xIn2]=[pIn1,sIn1]
-            Elset[pIn2]=Elset[pIn1]
-            for i1 in range(len(Elset[pIn1])):
-                "Create PSBs"
-                bIn1=Elset[pIn1][i1]
-                PSBset[bIn1]=removeEl(pIn1,IGset[Elset[pIn1][i1]])
-                IGset[Elset[pIn1][i1]].append(pIn2)
-                PSBIn.append(bIn1)
-                PSBn+=1
-            Elset[pIn1].append(xIn1)
-            Elset[pIn2].append(xIn2)
-            Elset[sIn1]=[xIn1,xIn2]
-            IGin+=2
-            SEin+=1
-            PPin+=1
-            IGn+=2
-            SEn+=1
-            PPnTemp+=1
+        psSlow=ps/PPn
+        if p>0:
+            if PPsSplitInd[p]==1:
+                if rand<psSlow:
+                    PPind=PPinSet[p]
+                    IGin1=PPset[PPind][0]
+                    PPin1="p"+str(PPin)
+                    PPset[PPin1]=[str(PPset[PPind][0])]
+                    PSBinSet.append(IGin1)
+                    SEin1=""
+                    for x in range(len(IGset[IGin1])):
+                        if IGset[IGin1][x]!=PPind:
+                            SEin1=IGset[IGin1][x]
+                            break
+                    PSBset[IGin1]=SEin1
+                    PSBn+=1
+                    IGset[IGin1].append(PPin1)
+                    PPinSet.append(PPin1)
+                    PPin+=1
+                    PPnTemp+=1
+                    PPsSplitInd[p]=0
+                    PPsSplitInd.append(0)
+            else:
+                PPsSplitInd[p]=1
+    PPn=PPnTemp
 
-    "PSB RUN"
-    for b in range(PSBn):
-        bIn1=PSBIn[b]
+    if PSBn>0:
+        PSBnTemp=PSBn
+        shift=0
+        for b in range(PSBn):
+            PSBind=PSBinSet[b-shift]
+            ELin1=PSBset[PSBind]
+            IGin1=PSBind
+            ELfrom=""
 
-    HGedgeSet=list(Elset.values())
-    print(HGedgeSet)
+            if IGset[IGin1][0]!=ELin1:
+                if IGset[IGin1][1]!=ELin1:
+                    ELfrom=IGset[IGin1][1]
+                    IGset[IGin1].pop(1)
+                else:
+                    ELfrom=IGset[IGin1][2]
+                    IGset[IGin1].pop(2)
+            else:
+                ELfrom=IGset[IGin1][2]
+                IGset[IGin1].pop(2)
 
-HGedgeSet=list(Elset.values())
-print(HGedgeSet)
+
+            if ELin1[:1]=="s":
+                IGin2="x"+str(IGin)
+                SEin2="s"+str(SEin)
+
+                IGprop1=""
+                if SEset[ELin1][0]==IGin1:
+                    IGprop1=SEset[ELin1][1]
+                else:
+                    IGprop1=SEset[ELin1][0]
+
+                ELprop1=""
+                if IGset[IGprop1][0]==ELin1:
+                    ELprop1=IGset[IGprop1][1]
+                else:
+                    ELprop1=IGset[IGprop1][0]
+                PSBset[IGprop1]=ELprop1
+                PSBinSet[b-shift]=IGprop1
+
+                IGset[IGin2]=[ELfrom,SEin2]
+                SEset[SEin2]=[IGin2,IGprop1]
+
+                IGset[IGprop1].append(SEin2)
+
+                if ELfrom[:1]=="s":
+                    if SEset[ELfrom][0]==IGin1:
+                        SEset[ELfrom][0]=IGin2
+                    else:
+                        SEset[ELfrom][1]=IGin2
+                else:
+                        PPset[ELfrom][0]=IGin2
+
+                SEinSet.append(SEin2)
+                IGin+=1
+                IGn+=1
+                SEin+=1
+                SEn+=1
+            else:
+                IGin2="x"+str(IGin)
+                IGset[IGin2]=[ELin1,ELfrom]
+
+                if SEset[ELfrom][0]==IGin1:
+                    SEset[ELfrom][0]=IGin2
+                else:
+                    SEset[ELfrom][1]=IGin2
+
+                PPset[ELin1].append(IGin2)
+                IGin+=1
+                IGn+=1
+
+                PSBinSet.pop(b-shift)
+                shift+=1
+                PSBnTemp-=1
+        PSBn=PSBnTemp
+
+    if len(PPset["p1"])>1:
+        for c in range(len(PPset["p1"])):
+            SEset["c"+str(c)]=[1,PPset["p1"][c]]
+        HGev.append(str(list(SEset.values())))
+    else:
+        HGev.append(str(list(SEset.values())))
 
 
 
 
+
+
+
+f = open("C://Users//leon_//OneDrive//Documents//Mycelium network research//Code//PythonCode//RadialRunAlgorithm//Test1.txt", "w")
+f.write(str(HGev))
+f.close()
 
