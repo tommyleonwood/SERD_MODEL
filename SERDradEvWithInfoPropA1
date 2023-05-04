@@ -2,8 +2,8 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-TS=30
-pd=0.2
+TS=40
+pd=0.1
 ps=1/2
 
 SEn=1
@@ -14,17 +14,18 @@ PPn=2
 PPin=3
 PPinSet=["p1","p2"]
 SEset = {
-    "s1" :  ["x1","x2"]
+    "s1" :  ["x2","x3"]
 }
 
+
 PPset= {
-    "p1" :  ["x1"],
-    "p2" :  ["x2"]
+    "p1" :  ["x2"],
+    "p2" :  ["x3"]
 }
 
 IGset={
-    "x1" : ["p1","s1"],
-    "x2" : ["s1","p2"]
+    "x2" : ["p1","s1"],
+    "x3" : ["s1","p2"]
 }
 
 PIPset={
@@ -37,7 +38,7 @@ PIPin=3
 PIPn=2
 
 IGn=2
-IGin=3
+IGin=4
 
 PSBn=0
 PSBin=1
@@ -48,7 +49,6 @@ PSBinSet=[]
 PPsSplitInd=[2,2]
 
 HGev=[]
-HGev.append(str(list(SEset.values())))
 
 PIPev=[]
 PIPs=[]
@@ -259,13 +259,16 @@ for t in range(TS):
     PIPev.append(PIPs)
 
 
-    if len(PPset["p1"])>1:
-        SEset["p1"]=PPset["p1"]
-        HGev.append(str(list(SEset.values())))
 
-    else:
-        HGev.append(str(list(SEset.values())))
-    
+    for i in range(len(PPset["p1"])):
+        cenSym="c"+str(i)
+        SEset[cenSym]=[PPset["p1"][i],"x1"]
+    HGev.append(str(list(SEset.values())))
+    for i in range(len(PPset["p1"])):
+        cenSym="c"+str(i)
+        SEset.pop(cenSym)
+
+
 g = open("C://Users//leon_//OneDrive//Documents//Mycelium network research//Code//PythonCode//RadialRunAlgorithm//PIPev1.txt", "w")
 g.write(str(PIPev))
 g.close()
@@ -274,3 +277,10 @@ g.close()
 f = open("C://Users//leon_//OneDrive//Documents//Mycelium network research//Code//PythonCode//RadialRunAlgorithm//HGev1.txt", "w")
 f.write(str(HGev))
 f.close()
+
+    
+                
+
+                
+
+
