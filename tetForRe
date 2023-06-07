@@ -1,0 +1,260 @@
+import random
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+pd=1/3
+pr=1/3
+pt=pd+pr
+
+"TS1 will count size of evolution to measurement and TS2 the size of the evolution after"
+SEnIn=200
+TS1=500
+
+"We may need to devise a method for signalling equlilbrium state of static system. This will allow us to scale the initial "
+"state of the system."
+"From there we may be able to implement both a growing and a static run."
+
+TS2=100
+iterations1=1000000
+iterations2=1000000
+
+ScaleMax=220
+ScaleMin=180
+
+staticRange=40
+
+scaleFactor=1.5
+
+scaleFact=1+pd-pr
+
+SEnEv=[]
+SEnEvAv=[]
+
+merged=False
+fullyReducedN=0
+notInRange=0
+
+SEnInput=[]
+PIParrayInput=[]
+emissionTimeInput=[]
+SEnEvInput=[]
+
+timeLagStore=[0]
+timeDifference=0
+timeThreshold=100
+timeEndGap=50
+
+for i in range(TS1):
+    timeLagStore.append(1)
+emmissionTime2=0
+
+for i in range(iterations1):
+    SEn=1
+    PIParray1=[0]
+    for s in range(SEn):
+        PIParray1.append(0)
+    emissionTime=0
+    SEnEv=[]
+
+    merged=False
+    for t in range(TS1):
+        if merged == False:
+            shift=0
+            for SEin in range(SEn):
+                rand=random.random()
+                if rand<pd:
+                    PIParray1.insert(SEin+shift+1,0)
+                    shift+=1
+                elif rand<pt:
+                    PIParray1[SEin+shift]+=PIParray1[SEin+shift+1]
+                    PIParray1.pop(SEin+shift+1)
+                    shift-=1
+            emissionTime+=PIParray1[0]
+            timeLagStore[t]+=emissionTime
+
+            PIParray1.pop(0)
+            PIParray1.append(1)
+            SEn+=shift
+            SEnEv.append(SEn)
+
+            
+
+            if SEn==0:
+                merged=True
+                fullyReducedN+=1
+                break
+
+    timeDifference=t-emissionTime
+
+    if merged==False:
+        if SEn>ScaleMin:
+            if SEn<ScaleMax:
+                "Tells us if the system is close to static equlibrium";
+                if timeDifference<timeThreshold:
+                    SEnInput.append(SEn)
+                    PIParrayInput.append(PIParray1)
+                    emissionTimeInput.append(emissionTime)
+                    SEnEvInput.append(SEnEv)
+                else:
+                    notInRange+=1
+            else:
+                notInRange+=1
+        else:
+            notInRange+=1
+
+sampleSize1=iterations1-fullyReducedN-notInRange
+
+print(sampleSize1)
+
+PIPupdateDensityEv=[]
+PIPdensityTot=0
+
+EmmissionScaleTempAv=[]
+EmmissionScaleSample=[]
+for se in range(TS2):
+    EmmissionScaleTempAv.append(0)
+    EmmissionScaleSample.append(0)
+
+EOratioScaleEredTot=[]
+for se in range(TS2):
+    EOratioScaleEredTot.append(0)
+
+fullyReducedN2=0
+
+PIPdensAvStatic=0
+PIPdensAvGrowing=0
+
+PIPtotStatic=0
+PIPtotGrowing=0
+
+emissionDiff=[]
+for t in range(TS2):
+    emissionDiff.append(0)
+
+
+
+sPlotRange=1000
+staticSEnInfoSet=[]
+for s in range(sPlotRange):
+    staticSEnInfoSet.append(0)
+
+staticSEnInfoSetSampleSize=[]
+for s in range(sPlotRange):
+    staticSEnInfoSetSampleSize.append(0)
+
+growingSEnInfoSet=[]
+for s in range(sPlotRange):
+    growingSEnInfoSet.append(0)
+
+growingSEnInfoSetSampleSize=[]
+for s in range(sPlotRange):
+    growingSEnInfoSetSampleSize.append(0)
+
+ratioInRange1=[]
+
+if sampleSize1>0:
+    for i in range(iterations2):
+        randomIn=random.randint(0,sampleSize1-1)
+        SEn=SEnInput[randomIn]
+
+        PIParray2=[]
+        for s in range(SEn+1):
+            PIParray2.append(PIParrayInput[randomIn][s])
+
+        SEnEv=[]
+        for t in range(TS1):
+            SEnEv.append(SEnEvInput[randomIn][t])
+
+        emissionTime=emissionTimeInput[randomIn]
+        emissionTime2=0
+
+        PIPupdateDensityEv=[]
+        ScaleAtEmmission=[]
+
+        merged=False
+        for t in range(TS2):
+            if merged == False:
+                shift=0
+                for SEin in range(SEn):
+                    rand=random.random()
+                    if rand<pd:
+                        PIParray2.insert(SEin+shift+1,0)
+                        shift+=1
+                    elif rand<pt:
+                        PIParray2[SEin+shift]+=PIParray2[SEin+shift+1]
+                        PIParray2.pop(SEin+shift+1)
+                        shift-=1
+                PIPupdateDensityEv.append(PIParray2[0])
+                PIParray2.pop(0)
+                PIParray2.append(1)
+                SEn+=shift
+                SEnEv.append(SEn)
+
+                if SEn==0:
+                    merged=True
+                    fullyReducedN2+=1
+
+
+        emissionTime2=emissionTime
+
+        if merged==False:
+            for t in range(TS2):
+                emissionTime2+=PIPupdateDensityEv[t]
+                if t>TS2-timeEndGap:
+                    PIPdenseN=PIPupdateDensityEv[t]
+
+
+                    if SEn < SEnEv[emissionTime2]+staticRange/2:
+                        if SEn > SEnEv[emissionTime2]-staticRange/2:
+                            if SEn<sPlotRange:
+                                staticSEnInfoSet[SEn]+=PIPdenseN
+                                staticSEnInfoSetSampleSize[SEn]+=1
+
+                    if SEn < scaleFactor*SEnEv[emissionTime2]+staticRange/2:
+                        if SEn > scaleFactor*SEnEv[emissionTime2]-staticRange/2:
+                            if SEn<sPlotRange:
+                                growingSEnInfoSet[SEnEv[emissionTime2]]+=PIPdenseN
+                                growingSEnInfoSetSampleSize[SEnEv[emissionTime2]]+=1
+
+    avStaticInfoDens=[]
+    avGrowingInfoDens=[]
+    ratioStaticGrowing=[]
+    for s in range(sPlotRange):
+        if staticSEnInfoSetSampleSize[s]>0:
+            avStaticInfoDens.append(staticSEnInfoSet[s]/staticSEnInfoSetSampleSize[s])
+        else:
+            avStaticInfoDens.append(0)
+
+        if growingSEnInfoSetSampleSize[s]>0:
+            avGrowingInfoDens.append(growingSEnInfoSet[s]/growingSEnInfoSetSampleSize[s])
+        else:
+            avGrowingInfoDens.append(0)
+
+        if avStaticInfoDens[s]>0:
+            ratioStaticGrowing.append((avGrowingInfoDens[s]/avStaticInfoDens[s])*scaleFactor)
+        else:
+            ratioStaticGrowing.append(0)
+
+
+
+    for s in range(sPlotRange):
+        if s>10:
+            if ratioStaticGrowing[s]>0:
+                ratioInRange1.append(ratioStaticGrowing[s])
+            else:
+                break
+        else:
+            ratioInRange1.append(ratioStaticGrowing[s])
+
+    ratioTest=np.array(ratioInRange1)
+
+    plt.plot(ratioTest)
+    plt.grid(True)
+    plt.show()
+
+    f = open("C://Users//leon_//OneDrive//Documents//Mycelium network research//Code//PythonCode//PIPdensityEvolution//RedshiftScaleFactorObservation//DirectObservation//dataA2.txt", "w")
+    f.write(str(ratioTest))
+    f.close()
+else:
+    print("sample Size 0")
