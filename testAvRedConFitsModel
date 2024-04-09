@@ -1,0 +1,56 @@
+import matplotlib.pyplot as plt
+import random
+import numpy as np
+import math
+
+
+#Try simple simulation with pr calculating the expected size of R:
+leftSEmax=100
+rightSEmax=100
+iterations=10000
+
+prRuns=10
+prDiff=0.05
+
+avRforDiffprRunsSim=[]
+avRforDiffprRunsModel=[]
+prVal=[]
+
+for run in range(prRuns):
+    pr=(run+1)*prDiff
+    sumRedContractions=0
+    for it in range(iterations):
+        redContraction=0
+        for _ in range(leftSEmax):
+            if random.random()<pr:
+                redContraction+=1
+            else:
+                break
+        for _ in range(rightSEmax):
+            if random.random()<pr:
+                redContraction+=1
+            else:
+                break
+        sumRedContractions+=redContraction
+    avRedContractions=sumRedContractions/iterations
+    print(avRedContractions)
+
+    sumMax=100
+    avRedCon2=0
+    for r in range(sumMax):
+        avRedCon2+=(r+1)*math.pow(pr,r)*(1-pr)*(1-pr)*r
+    print(avRedCon2)
+
+    avRforDiffprRunsSim.append(avRedContractions)
+    avRforDiffprRunsModel.append(avRedCon2)
+    prVal.append(pr)
+
+avRforDiffprRunsSim1 = np.array(avRforDiffprRunsSim)
+avRforDiffprRunsModel2 = np.array(avRforDiffprRunsModel)
+prVal1=np.array(prVal)
+ 
+plt.plot(prVal1,avRforDiffprRunsSim1, marker ='s')
+plt.plot(prVal1,avRforDiffprRunsModel2, marker   ='d')
+plt.grid(True)
+plt.show()
+
