@@ -1,0 +1,241 @@
+import matplotlib.pyplot as plt
+import random
+import numpy as np
+import math
+
+#Iteration numbers for first and second MC loop.
+iterations1=100000
+iterations2=100000
+
+#Global duplication and reduction probabilities.
+pr=1/3
+pd=1/3
+pt=pd+pr
+
+#TSs for first and second MC loop.
+TSs1=800
+TSs2=800
+
+#Set scale limits for scaled input sample of second MC loop.
+scaleMax=1600
+scaleMin=800
+
+#Count number of fully reduced filaments
+fullyReducedN=0
+
+#Instantiate lists for storing information regarding filament scale and PIP distribution, observed times for PIPs, scale evolutions and global TS at PIP observation.
+#This information will be utilised to test the average behaviour of the system against the model proposed in the article.
+seFilamentSample=[]
+seNsample=[]
+observedPIPenergySample=[]
+obsTScountSample=[]
+observedTSsSample=[]
+globalTSsSample=[]
+PIPnSample=[]
+aEvSample=[]
+
+#Start first MC loop.
+for i in range(iterations1):
+    #Simple initial state.
+    seFilament=[0,0]
+    seN=1
+    obsTScount=1
+    PIPn=0
+    observedPIPenergy=[]
+    observedTSs=[]
+    globalTSs=[]
+    fullyReduced=False
+    aEv=[seN]
+
+    #Run through TSs for each MC run.
+    for t in range(TSs1):
+
+        #SE action phase.
+        shift=0
+        for s in range(seN):
+            rand=random.random()
+            if rand<pr:
+                seFilament[s+shift]+=seFilament[s+shift+1]
+                seFilament.pop(s+shift+1)
+                shift-=1
+            elif rand<pt:
+                seFilament.insert(s+shift+1,0)
+                shift+=1
+
+        #Store history of state scale.
+        seN=len(seFilament)-1
+        aEv.append(seN)
+
+        #Check if filament has fully reduced.
+        if seN==0:
+            fullyReduced=True
+            fullyReducedN+=1
+            break
+        else:
+
+            #If not check to see if a PIP needs to be updated on the observing PP.
+            #PIP update and propagate phase.
+            #PIP update
+            if seFilament[0]>0:
+
+                #If so store information regarding the observed time and the global time of the observation and the total PIP number.
+                obsTScount+=seFilament[0]
+                observedTSs.append(obsTScount)
+                globalTSs.append(t)
+                PIPn+=1
+
+            #PIP propagation phase.
+            seFilament.pop(0)
+            seFilament.append(1)
+
+    #At the end of the run if the filament has not fully reduced check that it's scale is within the scale parameters and then add the data for the input data sample for
+    #the second CM loop.
+    if fullyReduced==False:
+        if seN<scaleMax:
+            if seN>scaleMin:
+                seFilamentSample.append(seFilament)
+                seNsample.append(len(seFilament)-1)
+                obsTScountSample.append(obsTScount)
+                observedTSsSample.append(observedTSs)
+                PIPnSample.append(PIPn)
+                globalTSsSample.append(globalTSs)
+                aEvSample.append(aEv)
+
+
+#Size of sample of inputs within given range for a(t)
+inputSampleSize=len(seNsample)
+
+print("Sample Size = "+str(len(seNsample)))
+
+#Define the data set with which to store the data for each PIP observed in the MC loop.
+dataSetEaeAndao=[]
+
+#Start second MC loop.
+for i in range(iterations2):
+    #Choose random input.
+    randInd=random.choice(range(inputSampleSize))
+
+    #Set all input parameters from random choice from input sample from the primary MC loop.
+    seN=seNsample[randInd]
+    seFilament=[]
+    for s in range(seN+1):
+        seFilament.append(seFilamentSample[randInd][s])
+    PIPn1=PIPnSample[randInd]
+    PIPn2=0
+    obsTScount=obsTScountSample[randInd]
+    observedPIPenergy=[]
+    observedTSs=[]
+    globalTSs=[]
+    aEv=[]
+    for p in range(PIPn1):
+        observedTSs.append(observedTSsSample[randInd][p])
+        globalTSs.append(globalTSsSample[randInd][p])
+    for t in range(TSs1):
+        aEv.append(aEvSample[randInd][t])
+
+    fullyReduced=False
+
+    #Run through each TS for each MC run. Each MC run takes a choice from the outputs from the primary MC loop.
+    for t in range(TSs2):
+
+        #SE action phase.
+        shift=0
+        for s in range(seN):
+            rand=random.random()
+            if rand<pr:
+                seFilament[s+shift]+=seFilament[s+shift+1]
+                seFilament.pop(s+shift+1)
+                shift-=1
+            elif rand<pt:
+                seFilament.insert(s+shift+1,0)
+                shift+=1
+
+        #Store history of scale state
+        seN=len(seFilament)-1
+        aEv.append(seN)
+
+        #Check if fully reduced.
+        if seN==0:
+            fullyReduced=True
+            fullyReducedN+=1
+            break
+        else:
+            #PIP update and propagate phase.
+            #PIP update.
+            if seFilament[0]>0:
+                obsTScount+=seFilament[0]
+                observedPIPenergy.append(seFilament[0])
+                observedTSs.append(obsTScount)
+                globalTSs.append(t+TSs1)
+                PIPn2+=1
+            #PIP propagation.
+            seFilament.pop(0)
+            seFilament.append(1)
+
+    # Store lists of ae ao and energy [...,[ae,ao,gamma,to,te],...]
+    if fullyReduced==False:
+        for pip in range(PIPn2):
+            dataSetEaeAndao.append([aEv[observedTSs[PIPn1+pip]],aEv[globalTSs[PIPn1+pip]],observedPIPenergy[pip],observedTSs[PIPn1+pip],globalTSs[PIPn1+pip]])
+
+
+#Determine the size of the secondary MC loop PIP data set. This dataset is fully includive and has a depth of 2.
+dataSetSize=len(dataSetEaeAndao)
+
+#The following formula extracts out the gamma value from the mathematical model and stores it on an array.
+gammaTestSim=[]
+gammaTestModel=[]
+gammaTest=[]
+for pip in dataSetEaeAndao:
+    sumGammaTest=0
+    tau=pip[4]-pip[3]+1
+    Hub=(1/tau)*math.log(pip[1]/pip[0])
+    ae=pip[1]
+    for t in range(tau):
+        sumGammaTest+=(1-Hub*ae)*math.exp(-Hub*t)
+    prAv=1/3-Hub/2
+    Rav=2*prAv/(1-prAv)
+    gammaTestSim.append(pip[2])
+    gammaTestModel.append(Rav*sumGammaTest)
+    gammaTest.append([pip[2],Rav*sumGammaTest])
+
+maxGamma=TSs2
+avGammaValues=[]
+sampleSizes=[]
+
+for g in range(maxGamma):
+    avGammaValues.append(0)
+    sampleSizes.append(0)
+
+#This formula finds the mean average of all of the gamma values aquired by the mathematical model for a given simulated gamma value in the data object.
+#This means that the ith value is the average value of gamma from the mathematical model for every data object that had i as it's gamma value.
+for pip in gammaTest:
+    if pip[0]<maxGamma+1:
+        avGammaValues[pip[0]-1]+=pip[1]
+        sampleSizes[pip[0]-1]+=1
+
+print(sampleSizes)
+
+#Divides by the sample sizes and a factor of e to get our final result.
+for g in range(maxGamma):
+    if sampleSizes[g]>0:
+        avGammaValues[g]=avGammaValues[g]/(math.exp(1)*sampleSizes[g])
+
+avGammaValues=[0]+avGammaValues
+
+#For the model to fit with the mathematical model, and therefore show correctly scaling cosmic redshifting effects, for the gamma values that are most common
+#a direct linear correlation should occur, in other words gammaAvModel=gammaSim, or x=y.
+correlationLine=range(maxGamma+1)
+
+x=np.array(avGammaValues)
+y=np.array(correlationLine)
+
+plt.plot(x)
+plt.plot(y)
+plt.grid(True)
+plt.show()
+
+
+
+
+
+    
